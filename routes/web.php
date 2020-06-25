@@ -18,3 +18,17 @@ Route::get('/', function () {
 Route::get('/subscription', function() {
     return view('subscription');
 });
+
+Route::get('/plan', function() {
+    return view('plan');
+});
+
+Route::get('/cancel', function() {
+    return view('cancel');
+});
+
+Route::get('/success', function() {
+    return view('success');
+});
+
+Route::post('/subscribe', 'SubscriptionController@subscribe');

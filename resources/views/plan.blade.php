@@ -67,40 +67,58 @@
 </style>
 </head>
 <body>
-  <h1>Subscription</h1>
+  <h1>Plan</h1>
     <div class="flex-center position-ref full-height">
         <div class="content">
             <div class="links">
-                <form action="/subscribe" method="POST">
-                    @csrf
-                    <button type="submit" class>PayPal Subscribe</button>
-                </form>
                 <a href="/subscription" class="mb-3">Go to subscription</a>
                 <div id="paypal-button"></div>
             </div>
         </div>
     </div>
 
+    <script src="https://www.paypal.com/sdk/js?client-id={{ getenv("CLIENT_ID") }}"></script>
     <!-- <script src="https://www.paypalobjects.com/api/checkout.js"></script> -->
-    <script
-       src="https://www.paypal.com/sdk/js?client-id=AegwPJu2vucXLvUO_gLL9sIqYeNBF6E6QzKUCkOfT08PpDL1mIHLsEJc9GWWoLfMLLPDq8e1-dvyDRc0&vault=true">
-    </script>
+    <!-- <script src="https://www.paypalobjects.com/api/checkout.js"></script> -->
     <script>
-        paypal.Buttons({
-            createSubscription: function(data, actions) {
-
-                return actions.subscription.create({
-                    'plan_id': 'P-4HC088875C116804UL3VBJKQ'
-                });
-            },
-
-            onApprove: function(data, actions) {
-                console.log('DATA555', data)
-                console.log('ACT555', actions)
-                alert('You have successfully created subscription ' + data.subscriptionID);
-            }
-        }).render('#paypal-button');
-
+    /*paypal.Button.render({
+        env: 'sandbox', // Or 'production'
+        style: {
+        size: 'large',
+        color: 'gold',
+        shape: 'pill',
+        },
+        // Set up the payment:
+        // 1. Add a payment callback
+        payment: function(data, actions) {
+        // 2. Make a request to your server
+        return actions.request.post('/api/plan/create-payment')
+            .then(function(res) {
+            // 3. Return res.id from the response
+            console.log(res.result.id);
+            return res.result.id;
+            //return res.id;
+            });
+        },
+        // Execute the payment:
+        // 1. Add an onAuthorize callback
+        onAuthorize: function(data, actions) {
+            console.log('DATA', data)
+            console.log('Actions', actions)
+        // 2. Make a request to your server
+        return actions.request.post('/api/plan/execute-payment', {
+            paymentID: data.paymentID,
+            payerID:   data.payerID,
+            orderID:   data.orderID,
+        })
+            .then(function(res) {
+            console.log(res);
+            alert('PAYMENT WENT THROUGH!!');
+            // 3. Show the buyer a confirmation message.
+            });
+        }
+    }, '#paypal-button');*/
+    paypal.Buttons().render('#paypal-button');
     </script>
   </body>
 </html>

@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
+//use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
+use App\CreateOrder;
 use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 use App\PaypalClient;
 
-class SubscribeController extends Controller
+class OrdersController extends Controller
 {
     protected $client;
 
@@ -18,7 +19,7 @@ class SubscribeController extends Controller
     public function create() {
         //$client = PaypalClient::client();
 
-        $request = new OrdersCreateRequest();
+        $request = new CreateOrder();
         $request->prefer('return=representation');
         $request->body = [
             "intent" => "CAPTURE",
@@ -30,7 +31,7 @@ class SubscribeController extends Controller
                 ]
             ]],
             "application_context" => [
-                "cancel_url" => "https://example.com/cancel",
+                "cancel_url" => url('/cancel'),
                 "return_url" => "https://example.com/return"
             ] 
         ];

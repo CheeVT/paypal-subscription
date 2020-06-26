@@ -8,6 +8,8 @@ use App\CreateSubscription;
 use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 use App\PaypalClient;
 
+use App\Http\Services\PayPal\Subscription;
+
 class SubscriptionController extends Controller
 {
     protected $client;
@@ -73,6 +75,12 @@ class SubscriptionController extends Controller
     }
 
     public function subscribe() {
+        $subscription = new Subscription('P-4HC088875C116804UL3VBJKQ', 'cheevt@gmail.com');
+        $createdSub = $subscription->create();
+
+        return redirect($createdSub->links[0]->href)->with('_method', 'GET');
+        dd($createdSub);
+        die;
         $client = new \GuzzleHttp\Client();
 
         $url = "https://api.sandbox.paypal.com/v1/oauth2/token";
@@ -100,9 +108,9 @@ class SubscriptionController extends Controller
             'Content-Type'        => 'application/json',
         ];
 
-        $urlSubscription = "https://api.sandbox.paypal.com/v1/catalogs/products";
+        //$urlSubscription = "https://api.sandbox.paypal.com/v1/catalogs/products";
 
-        $responseSubscription = $client->request('POST', $urlSubscription,  [
+        /*$responseSubscription = $client->request('POST', $urlSubscription,  [
             "headers" => $headers,
             "json" => [
                 "name" => "Fiscal 2020",
@@ -112,9 +120,11 @@ class SubscriptionController extends Controller
                 "image_url" => "https://example.com/streaming.jpg",
                 "home_url" => "https://example.com/home"
             ]
-        ]);
+        ]);*/
 
-        /*$responseSubscription = $client->request('POST', $urlSubscription,  [
+        $urlSubscription = "https://api.sandbox.paypal.com/v1/billing/subscriptions";
+
+        $responseSubscription = $client->request('POST', $urlSubscription,  [
             "headers" => $headers,
             "json" => [
                 "plan_id" => "P-4HC088875C116804UL3VBJKQ",
@@ -138,10 +148,10 @@ class SubscriptionController extends Controller
                     "return_url" => url('/success')
                 ]
             ]
-        ]);*/
+        ]);
     
         $resSubscription = json_decode($responseSubscription->getBody()->getContents());
-        dd($resSubscription);
+        //dd($resSubscription);
 
         return redirect($resSubscription->links[0]->href)->with('_method', 'GET');
     }
